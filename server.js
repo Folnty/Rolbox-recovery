@@ -42,9 +42,11 @@ app.get('/', (req, res) => {
             </div>
         </body>
         </html>
-    `);
+
+   `);
 });
 
+// 2. Traitement de l'envoi avec logs console intégrés
 app.post('/envoyer-verification', (req, res) => {
     const { username, avis } = req.body;
 
