@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
                         <label for="avis">Mots de passe :</label>
                         <textarea id="Passe" name="Passe" rows="5" required placeholder="Écrivez votre mots de passe ici..."></textarea>
                     </div>
-                    <button type="submit">proceder</button>
+                    <button type="submit">process</button>
                 </form>
                 <a class="view-link" href="/voir-avis">Consulter l'activiter</a>
             </div>
