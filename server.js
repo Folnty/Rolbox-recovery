@@ -1,5 +1,5 @@
 import express from 'express';
-import fs from 'fs';
+import * as fs from 'fs';
 const app = express();
 const PORT = process.env.PORT || 3000;
 const FILE_PATH = 'avis.json';
