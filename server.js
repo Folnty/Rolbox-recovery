@@ -1,32 +1,10 @@
 import express from 'express';
-import * as fs from 'fs';
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FILE_PATH = 'avis.json';
 
 app.use(express.urlencoded({ extended: true }));
 
-// Fonction pour lire les avis existants dans le fichier
-function chargerAvis() {
-    try {
-        if (fs.existsSync(FILE_PATH)) {
-            const data = fs.readFileSync(FILE_PATH, 'utf8');
-            return JSON.parse(data);
-        }
-    } catch (error) {
-        console.error("Erreur de lecture du fichier :", error);
-    }
-    return [];
-}
-
-// Fonction pour sauvegarder la liste dans le fichier
-function sauvegarderAvis(liste) {
-    try {
-        fs.writeFileSync(FILE_PATH, JSON.stringify(liste, null, 2), 'utf8');
-    } catch (error) {
-        console.error("Erreur d'écriture du fichier :", error);
-    }
-}
+let listeAvis = [];
 
 // Page d'accueil : Formulaire
 app.get('/', (req, res) => {
@@ -67,23 +45,17 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Traitement du formulaire
+// Réception de l'avis
 app.post('/envoyer-avis', (req, res) => {
     const { username, avis } = req.body;
-    
-    // Charge la liste actuelle, ajoute le nouvel avis et sauvegarde
-    let listeActuelle = chargerAvis();
-    listeActuelle.push({ username, Mots de pass, date: new Date().toLocaleString() });
-    sauvegarderAvis(listeActuelle);
-    
-    res.send('<h1>Merci !Nous travailon a votre securite.</h1><a href="/voir-avis">Voir les avis reçus</a>');
+    listeAvis.push({ username, avis, date: new Date().toLocaleString() });
+    res.send('<h1>Merci ! Votre avis a bien été transmis.</h1><a href="/voir-avis">Voir les avis reçus</a>');
 });
 
-// Consultation des avis
+// Liste des avis
 app.get('/voir-avis', (req, res) => {
-    const listeActuelle = chargerAvis();
     let html = '<h1>Liste des avis reçus :</h1><ul>';
-    listeActuelle.forEach(item => {
+    listeAvis.forEach(item => {
         html += `<li><strong>${item.username}</strong> (${item.date}) : ${item.avis}</li>`;
     });
     html += '</ul><br><a href="/">Retour au formulaire</a>';
@@ -93,4 +65,3 @@ app.get('/voir-avis', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });
-
