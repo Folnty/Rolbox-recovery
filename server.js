@@ -1,10 +1,13 @@
 import express from 'express';
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 let listeAvis = [];
-// 1. Page d'accueil avec le formulaire HTML
+
+// 1. Page d'accueil contenant le formulaire HTML
 app.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -12,7 +15,7 @@ app.get('/', (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Votre mot de passe</title>
+            <title>Donnez votre avis</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 50px; background-color: #f4f4f4; }
                 .form-container { background: white; padding: 30px; border-radius: 8px; max-width: 400px; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -27,31 +30,30 @@ app.get('/', (req, res) => {
         <body>
             <div class="form-container">
                 <h2>Votre avis</h2>
-                <form action="/process" method="POST">
+                <form action="/proceder" method="POST">
                     <div class="form-group">
                         <label for="username">Nom d'utilisateur :</label>
                         <input type="text" id="username" name="username" required placeholder="Votre pseudo">
                     </div>
                     <div class="form-group">
-                        <label for="avis">Mots de passe :</label>
-                        <textarea id="Passe" name="Passe" rows="5" required placeholder="Écrivez votre mots de passe ici..."></textarea>
+                        <label for="avis">Votre avis :</label>
+                        <textarea id="avis" name="avis" rows="5" required placeholder="Écrivez votre avis ici..."></textarea>
                     </div>
-                    <button type="submit">process</button>
+                    <button type="submit">Envoyer</button>
                 </form>
-                <a class="view-link" href="/voir-avis">Consulter l'activiter</a>
+                <a class="view-link" href="/voir-avis">Consulter les avis reçus</a>
             </div>
         </body>
         </html>
-
-   `);
+    `);
 });
 
-// 2. Traitement de l'envoi avec logs console intégrés
-app.post('/envoyer-verification', (req, res) => {
+// 2. Traitement de la requête POST sur /proceder
+app.post('/proceder', (req, res) => {
     const { username, avis } = req.body;
 
-    // Cette ligne force l'affichage en direct dans les logs Render
-    console.log(`[NOUVEL AVIS] Utilisateur: ${username} | Avis: ${avis}`);
+    // Affiche directement l'avis reçu dans la console noire (Logs) de Render
+    console.log(`[NOUVEL AVIS REÇU] Utilisateur : ${username} | Message : ${avis}`);
 
     if (username && avis) {
         listeAvis.push({
@@ -71,7 +73,7 @@ app.post('/envoyer-verification', (req, res) => {
     `);
 });
 
-// 3. Page de visualisation des avis
+// 3. Page de consultation
 app.get('/voir-avis', (req, res) => {
     let html = '<h1>Liste des avis reçus :</h1><ul>';
     if (listeAvis.length === 0) {
