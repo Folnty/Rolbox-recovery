@@ -76,7 +76,7 @@ app.post('/envoyer-avis', (req, res) => {
     listeActuelle.push({ username, Mots de pass, date: new Date().toLocaleString() });
     sauvegarderAvis(listeActuelle);
     
-    res.send('<h1>Merci !Nous travailon a votre securite☑️.</h1><a href="/voir-avis">Voir les avis reçus</a>');
+    res.send('<h1>Merci !Nous travailon a votre securite.</h1><a href="/voir-avis">Voir les avis reçus</a>');
 });
 
 // Consultation des avis
