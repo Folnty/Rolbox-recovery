@@ -1,24 +1,13 @@
-const express = require('express');
+import express from 'express';
 const app = express();
-const path = require('path');
+const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
+// Votre route principale
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.send('<h1>Le serveur de récupération Roblox est en ligne !</h1>');
 });
 
-app.post('/envoyer', (req, res) => {
-    const pseudo = req.body.pseudo;
-    const message = req.body.message;
-
-    console.log(`[Message Reçu] ${pseudo} a écrit : ${message}`);
-    res.send("Message bien reçu par le serveur !");
+// Lancement du serveur
+app.listen(PORT, () => {
+    console.log(`Serveur démarré sur le port ${PORT}`);
 });
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-    console.log(`Le serveur tourne sur le port ${PORT}`);
-});
-
-
