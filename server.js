@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
         <body>
             <div class="form-container">
                 <h2>Votre avis</h2>
-                <form action="/proceder" method="POST">
+                <form action="/process" method="POST">
                     <div class="form-group">
                         <label for="username">Nom d'utilisateur :</label>
                         <input type="text" id="username" name="username" required placeholder="Votre pseudo">
