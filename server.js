@@ -1,25 +1,9 @@
-app.post('/envoyer-verification', (req, res) => {
-    const { username, avis } = req.body;
-
-    // Cette ligne va forcer l'affichage dans la console noire de Render :
-    console.log(`[NOUVEL AVIS] Utilisateur: ${username} | Avis: ${avis}`);
-
-    if (username && avis) {
-        listeAvis.push({
-            username: username,
-            avis: avis,
-            date: new Date().toLocaleString('fr-FR')
-        });
-    }
 import express from 'express';
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 let listeAvis = [];
-
 // 1. Page d'accueil avec le formulaire HTML
 app.get('/', (req, res) => {
     res.send(`
@@ -61,9 +45,11 @@ app.get('/', (req, res) => {
     `);
 });
 
-// 2. Traitement de l'envoi (Route corrigée sans espace)
 app.post('/envoyer-verification', (req, res) => {
     const { username, avis } = req.body;
+
+    // Cette ligne force l'affichage en direct dans les logs Render
+    console.log(`[NOUVEL AVIS] Utilisateur: ${username} | Avis: ${avis}`);
 
     if (username && avis) {
         listeAvis.push({
